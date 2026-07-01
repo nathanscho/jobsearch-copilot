@@ -1,0 +1,14 @@
+{
+  "name": "jobsearch-copilot-marketplace",
+  "owner": {
+    "name": "Nathan Cho"
+  },
+  "description": "Personal marketplace for the jobsearch-copilot plugin, sourced directly from GitHub.",
+  "plugins": [
+    {
+      "name": "jobsearch-copilot",
+      "source": "./",
+      "description": "A personalized job-search system for senior PMs and similar roles: discover roles, prep for interviews, debrief rounds, diagnose mock interviews, and run cross-loop retrospectives."
+    }
+  ]
+}
