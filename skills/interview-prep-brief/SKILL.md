@@ -4,7 +4,7 @@ description: >
   This skill should be used when the user has an upcoming interview and needs a tailored prep brief. Triggers when the user provides a job description, interviewer details, interview type, and interview date. Produces a 3-part brief: Part 1 (Thesis) covers fit, role essence, the user's vision for the space, a spoken TMAY, and why-now; Part 2 (101) is a researched narrative on the company, product, stakeholders, and hard PM problems, with inline citations and a Sources section; Part 3 (Execution) is round-specific tactical prep — story routing, likely questions, objections, and questions to ask. A one-page day-of cheat sheet is generated alongside the full brief. Use for real interview rounds only, not mock sessions.
 metadata:
   workflow: interview-prep-brief
-  version: "2.3.0"
+  version: "2.3.1"
   step: "4-build"
 ---
 
@@ -55,7 +55,7 @@ Read all context files before researching or drafting. All paths are under your 
 |------|------|-----------------|
 | C1 — Story Bank | context/story-bank.md | STAR stories and question-type routing tags |
 | C2 — Candidate Profile | context/candidate-profile.md | Positioning statement, the target job profile(s) — each with pitch, proof points, differentiation, watch-out — and search thesis |
-| C3 — Target Company Map | context/target-company-map.md | Pre-researched fit angle, outreach status, and which target job profile this company is filed under |
+| C3 — Target Company Map | context/target-company-map.md | Pre-researched fit angle and which target job profile this company is filed under (live loop status lives in pipeline-state.md, not here) |
 | C4 — Mock Interview Diagnostics Log | context/mock-diagnostics-log.md | Answer mechanics gaps — structure problems, navigation vs. judgment patterns. Most relevant for case/analytical rounds. Skip silently if empty. |
 | C5 — Resume | the resume file named in config.md (`resume_path`) | Key achievements relevant to this role. Skip and note if file is missing — fall back to C1 and C2. |
 | C6 — Interview Loop Log | context/interview-loop-log.md | Cross-company patterns from prior rounds. Skip and note if empty. |

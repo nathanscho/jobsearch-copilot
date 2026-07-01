@@ -1,7 +1,12 @@
 # Target Company Map (C3)
 
-*Companies you're tracking, with fit angle and outreach status. Read + written by job-discovery, setup
-(starter seed), and the retro. Used to dedupe roles and surface excitement signals.*
+*Companies you're tracking, with fit angle and positioning research. Read + written by job-discovery,
+setup (starter seed), and the retro. Used to dedupe roles and surface excitement signals.*
+
+*This file tracks fit and positioning — not live loop status. Once a company has an active loop, stage
+and status live only in `pipeline-state.md` (fast-moving, updated after every scan/round) and per-company
+detail in `context/companies/[slug].md`. Don't duplicate a status field here — it goes stale the moment
+the loop moves and pipeline-state.md doesn't get the update.*
 
 *Every company should be grouped under the target job profile it maps to (see `candidate-profile.md`
 Target job profiles) — this keeps positioning and company targeting linked. If a company doesn't
@@ -25,9 +30,8 @@ company.*
 - **Fit angle:** [why you specifically fit here — the one-line thesis, tied to this profile's pitch]
 - **Why it's interesting:** [mission, product, team signal]
 - **Network:** [any warm connections or intro paths]
-- **Outreach status:** [not started / researching / applied / in loop / closed]
 - **Notes:** [anything relevant — flag if this is directional/unverified vs. confirmed against a
-  current opening]
+  current opening. If there's an active loop, note "see pipeline-state.md" rather than restating stage.]
 
 ---
 
@@ -38,7 +42,6 @@ company.*
 - **Fit angle:**
 - **Why it's interesting:**
 - **Network:**
-- **Outreach status:**
 - **Notes:**
 
 ---
@@ -50,7 +53,6 @@ company.*
 - **Fit angle:**
 - **Why it's interesting:**
 - **Network:**
-- **Outreach status:**
 - **Notes:**
 
 ---

@@ -4,7 +4,7 @@ description: >
   This skill should be used when the user wants to process their job-alert email digest and find relevant new PM roles. Triggers when the user says "check my job digest", "process my job-alert email", "run job discovery", or similar. Pulls the latest digest from the user's email connector, screens roles by title against the user's search constraints (C7), fetches JDs for roles that pass, deep-screens each JD against the user's candidate profile (C2) and constraints (C7), and presents a curated shortlist with clear pass/borderline/excluded verdicts. After the user selects roles to pursue, creates infrastructure stubs (Cx company file, C3 target-company-map, pipeline-state.md) and presents a 3-path action menu per role.
 metadata:
   workflow: job-discovery
-  version: "1.1.0"
+  version: "1.2.0"
   step: "4-build"
 ---
 
@@ -220,7 +220,10 @@ For each role the user selects, create stubs before presenting the action menu.
 - If company is already in C3: add a note under its existing entry that a new role was found (date +
   title) — leave it filed under whichever profile section it's already in.
 - If company is new: add a new entry under the matching profile's section with company name, role title,
-  date discovered, status = Exploring, and a one-line fit angle.
+  date discovered, and a one-line fit angle.
+- **Don't add a status/stage field to this entry.** C3 tracks fit and positioning only — loop status
+  lives in pipeline-state.md (Step 7.3) and the Cx company file (Step 7.1). Writing status in three
+  places is exactly how it goes stale.
 
 **3. Add stub to pipeline-state.md**:
 ```markdown
