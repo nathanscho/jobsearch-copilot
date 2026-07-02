@@ -22,25 +22,67 @@ release artifact.
    - **Anyone else's Cowork install** (friends testing this) — same as your own personal
      install: syncs from GitHub, never sees the Workshop.
 
-## The loop
+## Operating model
 
-1. **Edit.** Change skill/agent files in this folder as usual.
+### 1. Discovering gaps
 
-2. **Test before releasing.** Don't rely on `/jobsearch-copilot:*` in chat to reflect an
-   unpushed edit, it won't. Instead, ask Claude to run the skill directly against the local
-   file path (the same way the scheduled tasks do), or just walk through the changed logic by
-   hand against real data.
+Gaps surface from three places: your own real usage of the installed plugin (see "Workshop vs.
+installed" below), the scheduled tasks' daily output, or feedback from friends using their own
+install. When you notice one, don't fix it inline mid-task. Open a **GitHub Issue** on this repo
+(github.com/spamgriller/jobsearch-copilot → Issues → New issue). This is the backlog, one place,
+visible to you and to friends, and public issues let friends report their own gaps directly
+instead of routing everything through you.
 
-3. **Release** once you're happy:
-   - Bump `version` in `.claude-plugin/plugin.json`.
-   - `git add -A && git commit -m "..."` 
-   - Tag it to match: `git tag vX.Y.Z`
-   - `git push && git push --tags`
+### 2. Suggesting improvements
 
-4. **Pick it up in Cowork.** Personal plugins → find the `jobsearch-copilot-marketplace` entry
-   → refresh/re-add if it doesn't auto-pick-up the new version → reinstall/update the plugin.
-   (As of writing, removing and re-adding the marketplace is the most reliable way to force a
-   fresh pull — a plain "update" hasn't always been enough.)
+Triage issues in batches rather than one at a time. For each: write the fix as a short spec in
+the issue itself (what's wrong, what the fixed behavior should be) before touching code, this is
+usually a sentence or two. For anything that touches how multiple skills read/write the same
+context files (C1–C7), check downstream consistency first — a schema change in one place often
+needs matching edits across several SKILL.md files.
+
+### 3. Testing
+
+Edit in the Workshop, then validate **before** releasing by asking Claude to run the skill
+directly against the local file path, e.g. "run the updated
+`skills/job-discovery/SKILL.md` against my real pipeline" — same mechanism the scheduled tasks
+use. This is real data, not fixtures, so for a change that *writes* to your context files
+(job-discovery, jobsearch-status, jobsearch-coach), review the diff before confirming the write.
+Your `context/` files live in the outer Playground repo, which is also git-tracked, so a bad
+write is recoverable with `git diff` / `git checkout` there too, but it's cheaper to just look
+before you write.
+
+For a genuinely large or risky change (schema rework, cross-skill refactor), do it on a `dev`
+branch and merge to `main` once it's proven out. For a normal small fix, working straight on
+`main` is fine, you're the sole maintainer for now.
+
+### 4. Pushing the refinement to GitHub
+
+Once validated:
+- Bump `version` in `.claude-plugin/plugin.json`.
+- `git add -A && git commit -m "Fixes #<issue number> — <what changed>"`
+- Tag it to match: `git tag vX.Y.Z`
+- `git push && git push --tags`
+- Close the GitHub issue (referencing "Fixes #N" in the commit message does this automatically
+  once it's on `main`, or close it manually).
+- In Cowork: Personal plugins → find `jobsearch-copilot-marketplace` → refresh/re-add if it
+  doesn't auto-pick-up the new version → reinstall/update the plugin. Removing and re-adding the
+  marketplace has been the most reliable way to force a fresh pull so far.
+
+## Workshop skills vs. installed `/jobsearch-copilot:*` skills
+
+Use the **installed marketplace skill** (`/jobsearch-copilot:job-discovery`, etc.) for all real
+usage, actually running your job search day to day. This is the released, stable version, the
+same one friends are running, so using it yourself is also your best ongoing check that releases
+actually work.
+
+Use the **Workshop direct-path skill** (asking Claude to run the local `SKILL.md` file directly)
+only in one situation: you just edited something and want to validate the edit before it's
+released. It will never be what you reach for during normal usage, only during the testing step
+above.
+
+Rule of thumb: if the goal is "get my job search done," use the installed skill. If the goal is
+"did my edit work," use the Workshop path.
 
 ## Reverting a bad release
 
