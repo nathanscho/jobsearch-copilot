@@ -1,81 +1,288 @@
 # Job Search Co-pilot
 
-A personalized job-search system for senior PMs and similar roles. It discovers roles, prepares you for
-interviews, debriefs completed rounds, diagnoses mock interviews, and runs cross-loop retrospectives.
+A role-fit reasoning system for high-stakes job searches.
 
-The skills are generic. Everything personal — your profile, stories, constraints, and connectors —
-lives in **config + context files** in your own folder. That means you and anyone you share this with
-run the exact same skills against your own data.
+Most job-search tools help you move faster: tailor resumes, generate cover letters, apply to more roles.
+This one is built around a different philosophy:
+
+> Do not make hiring teams connect the dots.
+
+Job Search Co-pilot helps you understand what a role is really hiring for, map your experience honestly,
+form a clear positioning thesis, prepare for interviews, debrief what happened, and improve across the
+full loop.
+
+It is not an auto-apply bot.
+It is a thinking system for candidates who want quality, fit, and clarity.
+
+## Who this is for
+
+This is designed for senior PMs and similar knowledge-worker roles where success depends on more than
+keyword matching.
+
+It is especially useful if you are trying to:
+
+- Clarify your positioning across multiple target roles
+- Understand whether a role is actually a strong fit
+- Prepare for interviews with a sharper point of view
+- Build a reusable story bank
+- Debrief real interviews and extract forward guidance
+- Diagnose mock interview performance
+- Track patterns across a job-search loop
+
+The current setup is optimized around senior product management searches, but the underlying skills can
+be adapted to other roles.
+
+## Core idea
+
+A strong candidate does not just answer questions well.
+
+A strong candidate helps the interviewer understand:
+
+- What problem the role is likely hiring for
+- Why their background maps to that problem
+- Where there may be legitimate risks or gaps
+- What examples best prove fit
+- What questions should be asked to test mutual fit
+
+The goal is not to fake certainty. The goal is to turn scattered experience into a clear, evidence-backed
+role-fit thesis.
+
+## What it helps you produce
+
+Depending on the skill you run, the system can help create:
+
+- A candidate profile
+- A target-role positioning thesis
+- A story bank
+- A curated job shortlist
+- A pipeline/status view
+- Interview prep briefs
+- One-page interview cheat sheets
+- Interview debriefs
+- Mock interview diagnostics
+- Cross-loop coaching and retrospectives
+
+The system gets sharper over time because it accumulates context from your profile, stories, constraints,
+interview notes, pipeline, and debriefs.
 
 ## Quick start
 
-1. Install the plugin: in Cowork, open **Customize → Plugins → Personal plugins**, click **"+" → Add
-   marketplace → Add from a repository**, and enter `nathanscho/jobsearch-copilot`. Then install the
-   `jobsearch-copilot` plugin from that marketplace.
-2. Connect a folder in Cowork to hold your search.
-3. Say **"set up the job search co-pilot."** Setup is built around your resume: it reads your resume,
-   drafts your candidate profile — including 2-3 target job profiles with their own pitch and target
-   companies — and a few starter stories, then asks a handful of quick questions for what a resume can't
-   tell it (what you want next, your constraints, target companies already on your radar, your biggest
-   gap). Pick **Express** (resume only, ~2 min) or **Guided** (resume + ~6 questions, sharper, ~5 min).
-4. Generate your first prep brief: paste a job description, the interviewer, and the date.
+1. Install the plugin in Cowork:
+   - Open **Customize**
+   - Go to **Plugins**
+   - Open **Personal plugins**
+   - Click **+**
+   - Choose **Add marketplace**
+   - Choose **Add from a repository**
+   - Enter `nathanscho/jobsearch-copilot`
+   - Install the `jobsearch-copilot` plugin
+2. Connect a folder in Cowork to hold your job-search context.
+3. Say:
+   ```text
+   set up the job search co-pilot
+   ```
+4. Provide your resume.
+5. Choose a setup path:
+   - **Express:** resume-only setup, fastest path to value
+   - **Guided:** resume plus a few questions about your goals, constraints, target companies, and
+     perceived gaps
+6. Generate your first prep brief by pasting:
+   - Job description
+   - Company
+   - Interview round
+   - Interviewer, if known
+   - Interview date, if known
 
-## Minimum viable context (fastest path to value)
+The fastest useful path is:
 
-You don't need to fill out everything to get value. The only thing you must provide is your **resume** —
-everything else is either drafted from it, asked in a 5-question setup, or accumulated automatically as
-you use the tool.
+```text
+resume → confirm candidate profile → generate first prep brief
+```
 
-| Context | How it gets filled | Needed for |
+## Golden path
+
+If you are new, start here:
+
+1. **Set up the co-pilot** — builds your initial profile and context files from your resume.
+2. **Run a positioning thesis** — helps clarify the types of roles you should target and how to explain
+   your fit.
+3. **Build or refine your story bank** — turns your background into reusable evidence for interviews.
+4. **Generate an interview prep brief** — converts a role into a specific interview strategy.
+5. **Debrief after each real interview** — captures what happened, what signal you got, and what to
+   adjust next.
+6. **Run coaching periodically** — looks across the full search for patterns, blindspots, and next
+   actions.
+
+## Minimum viable context
+
+You do not need to fill out everything manually. The only thing you need to start is your resume.
+Everything else can be drafted, asked during setup, or accumulated as you use the system.
+
+| Context | How it gets filled | Used for |
 | --- | --- | --- |
-| Resume | You provide the file | Prep briefs (the fast first win) |
-| Candidate profile / stories | Auto-drafted and seeded from your resume, you confirm | Prep briefs |
-| Search constraints | 6-question setup | Job discovery |
-| Target company map | Lightweight starter seed during Guided setup, organized by target job profile | Networking + job discovery |
-| Loop log, intelligence, mock diagnostics, pipeline | Fill in automatically as you run debriefs, retros, and discovery | Later-stage value |
+| Resume | You provide it | Fast first prep briefs |
+| Candidate profile | Drafted from your resume, then confirmed | Positioning and interview prep |
+| Story bank | Seeded from your resume, then expanded | Behavioral and leadership interviews |
+| Search constraints | Asked during setup | Job discovery and prioritization |
+| Target company map | Seeded during guided setup | Networking and role targeting |
+| Loop logs | Built from debriefs | Pattern recognition |
+| Mock diagnostics | Created from practice interviews | Coaching and skill development |
+| Pipeline state | Synced from email and optional chat | Search status and next actions |
 
-So the smallest useful start is: **resume → confirm the auto-drafted profile → first prep brief.** The
-system gets sharper the more you use it.
+The system is useful on day one, but becomes more valuable after each prep, debrief, and diagnostic.
 
-## What's inside
-
-**Skills**
+## Skills
 
 | Skill | What it does |
 | --- | --- |
-| `setup-jobsearch` | One-time onboarding — creates config + context files |
-| `positioning-thesis` | Analyzes your target JDs → proposes 2-3 target job profiles (pitch, differentiation, target companies each) + exposes adjacent-fit blindspots (builds C2, and C3 if companies surface) |
-| `story-bank-builder` | Finds gaps in your story coverage and interviews you to fill them — never fabricates (builds C1) |
-| `job-discovery` | Screens your job-alert digest into a curated shortlist |
-| `jobsearch-status` | Syncs email (+ optional chat) into a current pipeline view |
-| `interview-prep-brief` | A tailored 3-part prep brief + one-page cheat sheet per round |
-| `interview-debrief` | Scores a completed round and extracts forward guidance |
-| `diagnose-mock-interview` | Coaching on practice/mock answers (not real rounds) |
-| `jobsearch-coach` | Your reflective coach — patterns, blindspots, accountability, goals, what to focus on, plus a periodic deep review (funnel + positioning) |
+| `setup-jobsearch` | One-time onboarding. Creates your config and context files. |
+| `positioning-thesis` | Analyzes target JDs and proposes target job profiles, pitch, differentiation, target companies, and adjacent-fit blindspots. |
+| `story-bank-builder` | Finds gaps in your story coverage and interviews you to fill them. Never fabricates. |
+| `job-discovery` | Screens job alerts into a curated shortlist. |
+| `jobsearch-status` | Syncs email, plus optional chat, into a current pipeline view. |
+| `interview-prep-brief` | Creates a tailored prep brief and one-page cheat sheet for a specific round. |
+| `interview-debrief` | Scores a completed round and extracts forward guidance, from your notes or a transcript if you have one. |
+| `diagnose-mock-interview` | Diagnoses mock or practice answers. Not intended for real interview debriefs. |
+| `jobsearch-coach` | Acts as a reflective coach across goals, patterns, blindspots, accountability, funnel health, and positioning. |
 
-**On the "coach" / "what should I do next":** just say "coach me" or "what should I focus on" and the
-`jobsearch-coach` skill runs in your main chat. (An earlier `jobsearch-copilot` *agent* was retired —
-agents run isolated from your folder in Cowork and couldn't read your pipeline. The skill replaces it.)
+To get coaching, say something like:
 
-**Add-on (optional, needs a chat connector)**
+```text
+coach me
+```
 
-`addons/daily-digest.md` — a scheduled morning digest posted to your chat channel.
+or:
+
+```text
+what should I focus on next?
+```
+
+(An earlier `jobsearch-copilot` *agent* was retired: agents run isolated from your folder in Cowork and
+couldn't reliably read your pipeline. `jobsearch-coach` replaces it.)
+
+## Optional add-on
+
+`addons/daily-digest.md` — a scheduled morning digest that can be posted to your chat channel. This
+requires a chat connector.
 
 ## Personalization model
 
-- `context/config.md` — paths, job-alert source, and which connectors you use.
-- `context/*.md` — your candidate profile (C2), story bank (C1), search constraints (C7), target
-  company map (C3), and logs that accumulate as you go (C4/C6/C8, pipeline-state).
-- Templates for all of these ship in `templates/` and are copied into your folder during setup.
+The skills in this repo are generic. Your personal job-search data lives in your own connected folder and
+tools, never in this repo.
+
+| File | Purpose |
+| --- | --- |
+| `context/config.md` | Paths, job-alert source, and which connectors you use |
+| `context/story-bank.md` (C1) | Your reusable interview stories |
+| `context/candidate-profile.md` (C2) | Your candidate profile and positioning |
+| `context/target-company-map.md` (C3) | Target companies and role categories |
+| `context/mock-diagnostics-log.md` (C4) | Practice interview diagnostics |
+| `context/interview-loop-log.md` (C6) | Interview loop notes and debrief history |
+| `context/search-constraints.md` (C7) | Role preferences, constraints, and search criteria |
+| `context/jobsearch-intelligence.md` (C8) | Company, role, and interview intelligence |
+| `context/coaching-log.md` (C9) | History of coaching check-ins and commitments |
+| `context/companies/[slug].md` (Cx) | Per-company file: prior rounds, interviewer intel |
+| `context/pipeline-state.md` | Current job-search pipeline state |
+
+Templates for these files live in `templates/` and are copied into your folder during setup.
 
 ## Connectors
 
-See `CONNECTORS.md`. Only an email connector is required; chat and files are optional conveniences the
-skills skip cleanly when absent.
+See `CONNECTORS.md`. At minimum, you need an email connector. Optional connectors can improve the
+experience:
 
-## Your data
+- Chat connector, for digests and chat-based search updates
+- File connector, for uploading finished prep briefs and debriefs
 
-Everything personal, your resume, stories, pipeline, and connector access, stays in the folder you
-connect in Cowork and in your own connected tools (email, chat, files). None of it is sent back to the
-plugin author or stored anywhere outside your own Claude/Cowork account. The skills in this repo are
-generic and contain no one else's data.
+If optional connectors are missing, the skills skip those steps cleanly.
+
+## Data and privacy
+
+Your personal data stays in your own environment. That includes:
+
+- Resume
+- Candidate profile
+- Story bank
+- Search constraints
+- Pipeline
+- Interview notes
+- Email access
+- Chat access
+- Files
+
+None of your personal data is sent back to the plugin author. This repo contains generic skills and
+templates only — it does not include anyone else's private job-search data.
+
+## What this is not
+
+This is not a tool for:
+
+- Mass-applying to jobs
+- Spamming recruiters
+- Fabricating experience
+- Keyword-stuffing resumes
+- Outsourcing judgment to AI
+- Pretending every role is a fit
+
+The system is intentionally built around human judgment. You own the truth, the strategy, and the final
+voice. The co-pilot helps structure the thinking.
+
+## Example prompts
+
+Set up the system:
+
+```text
+set up the job search co-pilot
+```
+
+Create a positioning thesis:
+
+```text
+Analyze these target roles and help me refine my positioning thesis.
+```
+
+Build the story bank:
+
+```text
+Review my story bank and find the biggest gaps for senior PM interviews.
+```
+
+Prepare for an interview:
+
+```text
+Create an interview prep brief for this role.
+```
+
+Debrief a real interview:
+
+```text
+Debrief this interview and tell me what signal I should take from it.
+```
+
+Diagnose a mock interview:
+
+```text
+Diagnose this mock answer. Separate navigation issues from judgment issues.
+```
+
+Get coaching:
+
+```text
+Coach me on what I should focus on next in my search.
+```
+
+## Design principles
+
+1. **Fit over volume** — the goal is not to apply to more jobs. The goal is to identify and pursue roles
+   where there is a credible fit.
+2. **Evidence over vibes** — positioning should be grounded in real experience, real stories, and real
+   role requirements.
+3. **Clarity over completeness** — interviewers should not have to assemble your fit from scattered
+   examples.
+4. **Human judgment over automation** — the co-pilot can suggest, structure, and challenge. It should not
+   invent or decide for you.
+5. **Learning loop over one-off prep** — each prep, mock, and debrief should improve the next one.
+
+## License
+
+MIT
