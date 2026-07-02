@@ -1,6 +1,6 @@
 # Interview Scoring Rubric
 
-*Read this file before scoring in Step 2. Score against these behavioral descriptions — not against other rounds the user has done, and not against the model's implicit sense of "good." Transcript excerpts are ground-truth anchors: real the user moments at a validated score level.*
+*Read this file before scoring in Step 2. Score against these behavioral descriptions — not against other rounds the user has done, and not against the model's implicit sense of "good." Notes/transcript excerpts are ground-truth anchors: real the user moments at a validated score level.*
 
 ---
 
@@ -255,7 +255,7 @@ Score only **Clarity**, **Positioning alignment**, and **Conviction**. Mark Dept
 
 ## Rubric maintenance
 
-Add new anchors after validated debriefs: when a transcript excerpt clearly exemplifies a score level and the user confirms the score, add it here in the relevant section. Format: `*Anchor — [Interviewer] ([Round type], [Date], score [X.X]): [2-3 sentence description of what specifically happened.]*`
+Add new anchors after validated debriefs: when a notes/transcript excerpt clearly exemplifies a score level and the user confirms the score, add it here in the relevant section. Format: `*Anchor — [Interviewer] ([Round type], [Date], score [X.X]): [2-3 sentence description of what specifically happened.]*`
 
 Do not add anchors from AI-inferred scores alone. An anchor is only valid if the user has confirmed the score as accurate.
 

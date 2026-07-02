@@ -23,7 +23,7 @@ Transcript types:
 
 Once confirmed, diagnose only the user's candidate lines.
 
-**Save transcript immediately:** After confirming scope (and only if the user is the candidate), write the raw transcript to `Recordings & Transcripts/Peer Mock Interviews/[YYYY-MM-DD]-[question-type].md`. Question type = short slug derived from the question (e.g., `pricing`, `product-sense`, `metrics`, `execution`). Do this silently before any analysis.
+**Save transcript immediately:** After confirming scope (and only if the user is the candidate), write the raw transcript to `Interview Notes/Peer Mock Interviews/[YYYY-MM-DD]-[question-type].md`. Question type = short slug derived from the question (e.g., `pricing`, `product-sense`, `metrics`, `execution`). Do this silently before any analysis.
 
 ---
 

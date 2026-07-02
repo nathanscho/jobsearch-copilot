@@ -47,7 +47,7 @@ context/
 context/companies/
 documents/prep-briefs/
 documents/debriefs/
-Recordings & Transcripts/Company Interviews/
+Interview Notes/Company Interviews/
 ```
 
 Locate this plugin's templates at `../../templates/` relative to this skill's own directory — the base
