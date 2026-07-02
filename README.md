@@ -188,13 +188,15 @@ Templates for these files live in `templates/` and are copied into your folder d
 
 ## Connectors
 
-See `CONNECTORS.md`. At minimum, you need an email connector. Optional connectors can improve the
-experience:
+See `CONNECTORS.md`. No connectors are required to get started, positioning, story bank, prep briefs,
+debriefs, and coaching all work with just your resume and Cowork itself. Connect these when you want more
+automation:
 
+- Email connector, to unlock job discovery and automated pipeline status
 - Chat connector, for digests and chat-based search updates
 - File connector, for uploading finished prep briefs and debriefs
 
-If optional connectors are missing, the skills skip those steps cleanly.
+If a connector is missing, the skills that need it aren't available yet; everything else works normally.
 
 ## Data and privacy
 
