@@ -1,7 +1,7 @@
 # Dev workflow — jobsearch-copilot
 
 This plugin is distributed straight from this GitHub repo via a Cowork/Claude Code plugin
-marketplace (`.claude-plugin/marketplace.json`, plugin source `github: spamgriller/jobsearch-copilot`).
+marketplace (`.claude-plugin/marketplace.json`, plugin source `github: nathanscho/jobsearch-copilot`).
 There is no separate build step and no `.plugin` bundle file anymore — this repo *is* the
 release artifact.
 
@@ -29,7 +29,7 @@ release artifact.
 Gaps surface from three places: your own real usage of the installed plugin (see "Workshop vs.
 installed" below), the scheduled tasks' daily output, or feedback from friends using their own
 install. When you notice one, don't fix it inline mid-task. Open a **GitHub Issue** on this repo
-(github.com/spamgriller/jobsearch-copilot → Issues → New issue). This is the backlog, one place,
+(github.com/nathanscho/jobsearch-copilot → Issues → New issue). This is the backlog, one place,
 visible to you and to friends, and public issues let friends report their own gaps directly
 instead of routing everything through you.
 
