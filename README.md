@@ -9,7 +9,9 @@ run the exact same skills against your own data.
 
 ## Quick start
 
-1. Install the plugin.
+1. Install the plugin: in Cowork, open **Customize → Plugins → Personal plugins**, click **"+" → Add
+   marketplace → Add from a repository**, and enter `nathanscho/jobsearch-copilot`. Then install the
+   `jobsearch-copilot` plugin from that marketplace.
 2. Connect a folder in Cowork to hold your search.
 3. Say **"set up the job search co-pilot."** Setup is built around your resume: it reads your resume,
    drafts your candidate profile — including 2-3 target job profiles with their own pitch and target
@@ -70,3 +72,10 @@ agents run isolated from your folder in Cowork and couldn't read your pipeline. 
 
 See `CONNECTORS.md`. Only an email connector is required; chat and files are optional conveniences the
 skills skip cleanly when absent.
+
+## Your data
+
+Everything personal, your resume, stories, pipeline, and connector access, stays in the folder you
+connect in Cowork and in your own connected tools (email, chat, files). None of it is sent back to the
+plugin author or stored anywhere outside your own Claude/Cowork account. The skills in this repo are
+generic and contain no one else's data.

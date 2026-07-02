@@ -163,9 +163,10 @@ map is ready and can guide outbound networking even before job-discovery is conn
 
 ### Step 7 — Offer add-ons
 
-1. **The co-pilot agent** — one orchestrator across the funnel (discover → prep → interview → debrief →
-   retro) that reads pipeline state and suggests the next action. Recommend enabling once they're
-   comfortable with the individual skills.
+1. **Coaching check-ins** — once they're comfortable with the individual skills, mention they can say
+   "coach me" or "what should I focus on" any time for a reflective, cross-loop check-in
+   (`jobsearch-coach`). This is also where periodic strategic reviews (funnel health, positioning,
+   targeting) happen, on request or once several loops have closed.
 2. **Daily chat digest (optional, needs a chat connector)** — a scheduled morning task that runs
    job-discovery + jobsearch-status and posts a digest. See `<plugin-root>/addons/daily-digest.md`.
 
