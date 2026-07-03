@@ -1,10 +1,10 @@
 ---
 name: job-discovery
 description: >
-  This skill should be used when the user wants to process their job-alert email digest and find relevant new PM roles. Triggers when the user says "check my job digest", "process my job-alert email", "run job discovery", or similar. Pulls the latest digest from the user's email connector, screens roles by title against the user's search constraints (C7), fetches JDs for roles that pass, deep-screens each JD against the user's candidate profile (C2) and constraints (C7), and presents a curated shortlist with clear pass/borderline/excluded verdicts. After the user selects roles to pursue, creates infrastructure stubs (Cx company file, C3 target-company-map, pipeline-state.md) and presents a 3-path action menu per role.
+  This skill should be used when the user wants to process their job-alert email digest and find relevant new PM roles. Triggers when the user says "check my job digest", "process my job-alert email", "run job discovery", or similar. Pulls the latest digest from the user's email connector (and LinkedIn's own job alerts, as a second independent source, if configured), screens roles by title against the user's search constraints (C7), fetches JDs for roles that pass, deep-screens each JD against the user's candidate profile (C2) and constraints (C7), and presents a curated shortlist with clear pass/borderline/excluded verdicts. After the user selects roles to pursue, creates infrastructure stubs (Cx company file, C3 target-company-map, pipeline-state.md) and presents a 3-path action menu per role.
 metadata:
   workflow: job-discovery
-  version: "1.2.0"
+  version: "1.3.0"
   step: "4-build"
 ---
 
@@ -25,7 +25,7 @@ All paths are under your connected job-search folder.
 | C3 | Target Company Map | `context/target-company-map.md` | Read + write |
 | Cx | Company File | `context/companies/[slug].md` | Create (new stubs) |
 | — | Pipeline State | `context/pipeline-state.md` | Read + write |
-| — | Gmail | Gmail MCP | Read (job digest only) |
+| — | Gmail | Gmail MCP | Read (primary job digest, plus LinkedIn job alerts if `linkedin_alert_sender` is set in config.md) |
 
 ---
 
@@ -49,16 +49,41 @@ Before touching Gmail, load:
 
 ---
 
-### Step 2 — Pull Latest Job-Alert Digest
+### Step 2 — Pull Latest Job Alerts (Primary + Optional Secondary)
 
-Search Gmail for emails from `the sender configured as job_alert_sender in config.md`.
+**a) Primary source — `job_alert_sender`:**
+
+Search Gmail for emails from the sender configured as `job_alert_sender` in config.md.
 
 **Rules:**
 - Pull the most recent unprocessed digest (after the last run date if logged; otherwise the most recent one).
 - If multiple unprocessed digests exist, process the most recent one first; after presenting results, offer to run again for older ones.
-- If no digest is found, tell the user and stop.
+- If no digest is found from this source, note it and continue — don't stop unless the secondary source below is also empty or not configured.
 - Extract: role titles, company names, and JD URLs from the email body.
 - Log the digest date for deduplication.
+- Tag every role extracted here with `source: primary`.
+
+**b) Secondary source — `linkedin_alert_sender` (optional, only if set in config.md):**
+
+Search Gmail for emails from `linkedin_alert_sender`.
+
+**Rules:**
+- LinkedIn sends alerts on its own cadence — often several smaller emails a day rather than one rollup. Pull **all** unprocessed emails from this sender since the last run, not just the most recent one.
+- Extract: role titles, company names, and job URLs from each email.
+- LinkedIn job links are frequently click-tracking redirects (`lnkd.in`-style), not direct posting URLs. A higher "JD inaccessible" rate from this source in Step 5 (login walls, expired redirects) is expected — report it like any other inaccessible JD, don't treat it as a failure.
+- Tag every role extracted here with `source: linkedin`.
+
+**If both sources are empty:** tell the user and stop.
+**If only one source has data:** proceed with that source alone and note in the output which source ran dry — this visibility is the point of having two sources; a silent gap defeats it.
+
+---
+
+### Step 2.5 — Merge and Deduplicate
+
+Combine roles pulled from both sources into one working list before title screening.
+
+- Match on company + normalized title (case-insensitive, punctuation-stripped). If the same role appears from both sources, keep a single entry, re-tag it `source: both`, and treat that as a mild positive signal — independent confirmation from two feeds, not duplicate noise.
+- Also check the merged list against companies/roles already tracked in pipeline-state.md so something you're already pursuing doesn't re-surface as newly discovered.
 
 ---
 
@@ -121,45 +146,47 @@ Present the full screened output in chat. Wait for the user's selection before p
 ```
 ## Job Discovery — [date]
 [N] roles screened | [N] pass | [N] borderline-high | [N] borderline-low | [N] JD inaccessible | [N] excluded
+Sources: [N] primary | [N] LinkedIn | [N] both [omit this line entirely if linkedin_alert_sender is not configured]
 
 ---
 
 ### Recommended to pursue
-**[Company] — [Title]**
+**[Company] — [Title]** *(source: primary / linkedin / both)*
 Why: [1-2 sentence fit signal — what specifically makes this a match]
 JD: [URL]
 
 ---
 
 ### Borderline-High — likely worth pursuing
-**[Company] — [Title]**
+**[Company] — [Title]** *(source: primary / linkedin / both)*
 Concern: [specific, minor concern]
 JD: [URL]
 
 ---
 
 ### Borderline-Low — pursue only if you want to override
-**[Company] — [Title]**
+**[Company] — [Title]** *(source: primary / linkedin / both)*
 Concern: [specific, material concern]
 JD: [URL]
 
 ---
 
 ### JD Inaccessible — review manually
-**[Company] — [Title]**
-Note: JD could not be fetched ([reason: login wall / timeout / 404]). Passed title screen. Review the JD directly before deciding.
+**[Company] — [Title]** *(source: primary / linkedin / both)*
+Note: JD could not be fetched ([reason: login wall / timeout / 404 / expired redirect]). Passed title screen. Review the JD directly before deciding.
 JD: [URL]
 
 ---
 
 ### Excluded
-- [Company] — [Title]: [one-line reason]
-- [Company] — [Title]: [one-line reason]
+- [Company] — [Title] *(source)*: [one-line reason]
+- [Company] — [Title] *(source)*: [one-line reason]
 ```
 
 **Rules:**
 - Excluded list is always shown, even if long. The user should see everything that was filtered.
 - Borderline-High, Borderline-Low, and JD Inaccessible sections appear only if roles fall into them.
+- Omit the source tag entirely (from the summary line and every entry) if `linkedin_alert_sender` isn't configured — a single-source setup doesn't need to see "(source: primary)" on everything.
 - Use plain, specific language for concerns and exclusion reasons — not "may not be a fit."
 - Never merge JD Inaccessible roles into the Borderline buckets — they need their own section so the user knows to go look at the actual JD.
 
@@ -279,11 +306,13 @@ After completing the run, append one row to `.build/job-discovery/runs.md` (crea
 ```markdown
 # job-discovery — Run Log
 
-| Date | Digest date | Roles screened | Pass | Borderline | Excluded | Roles selected |
-|---|---|---|---|---|---|---|
+| Date | Digest date | Primary count | LinkedIn count | Roles screened | Pass | Borderline | Excluded | Roles selected |
+|---|---|---|---|---|---|---|---|---|
 ```
 
 Row format:
 ```
-| [date] | [digest date] | [N] | [N] | [N] | [N] | [list of selected companies, or "none"] |
+| [date] | [digest date] | [N] | [N, or "not configured" if linkedin_alert_sender isn't set] | [N] | [N] | [N] | [N] | [list of selected companies, or "none"] |
 ```
+
+Watch the LinkedIn count column over time — a sudden drop to zero across several runs is the signal that source has gone quiet (bad sender address, changed email format, expired saved search) even though the run itself completed normally.

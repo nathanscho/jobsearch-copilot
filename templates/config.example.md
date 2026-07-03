@@ -16,8 +16,14 @@ step when an optional connector is not set.
 
 ## Job alerts (required for job-discovery)
 
-- **job_alert_sender**: the email address your job-alert digest comes from
-  (e.g. `alerts@newpmjobs.com`, a LinkedIn job alert, an Otta/Welcome digest, etc.)
+- **job_alert_sender**: the email address your primary job-alert digest comes from
+  (e.g. `alerts@newpmjobs.com`, an Otta/Welcome digest, etc.)
+- **linkedin_alert_sender** (optional): the email address LinkedIn sends job alerts from
+  (e.g. `jobs-noreply@linkedin.com`). When set, job-discovery treats LinkedIn's own alert emails
+  as a second, independent source alongside job_alert_sender — driven by your own saved search
+  on LinkedIn rather than a third-party curator's picks, and keeps discovery working if
+  job_alert_sender's feed ever goes quiet or changes format. Leave blank to run with just the
+  primary source.
 
 ## Connectors
 
@@ -43,6 +49,7 @@ workspace_path: ~/Job Search
 context_path: ~/Job Search/context
 resume_path: Resume/Jane_Doe_Resume.docx
 job_alert_sender: alerts@newpmjobs.com
+linkedin_alert_sender: jobs-noreply@linkedin.com   # optional — blank to run with just the primary digest
 email_connector: Gmail
 chat_connector:            # blank — running without chat
 chat_channel_id:
