@@ -10,6 +10,14 @@ per-role cards to your configured chat channel. You react to the cards (👍 / �
 thread with pipeline updates; the next `jobsearch-status` run reads those reactions and replies back
 into your pipeline state.
 
+**Engagement section (optional, requires `context/engagement-log.md`):** if the engagement log
+exists, the digest also includes: today's action queue items (sends due, replies owed), threads gone
+quiet past their follow-up date, any open staleness flags from `context/market-pulse.md`, and — if a
+LinkedIn inbox connector (e.g., Kondo) is configured — a reconciliation pass: chats where the other
+party replied since the last digest are surfaced as "your turn," and the engagement log's thread
+states are updated to match reality before the digest renders. DM state comes from the inbox
+connector; the log is the working notes layered on top, never a second source of truth.
+
 The skills themselves never post to chat on their own — posting is orchestration, which is why it lives
 in a scheduled task rather than inside a skill. This keeps the skills side-effect-free and safe to run
 on demand.
