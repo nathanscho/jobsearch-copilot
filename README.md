@@ -144,6 +144,9 @@ The system is useful on day one, but becomes more valuable after each prep, debr
 | `interview-debrief` | Scores a completed round and extracts forward guidance, from your notes or a transcript if you have one. |
 | `diagnose-mock-interview` | Diagnoses mock or practice answers. Not intended for real interview debriefs. |
 | `jobsearch-coach` | Acts as a reflective coach across goals, patterns, blindspots, accountability, funnel health, and positioning. |
+| `market-pulse` | Scans your watchlist for changes and surfaces engagement openings. Never drafts or sends. |
+| `engagement-sync` | Reconciles thread state against your LinkedIn inbox and scores who to engage next. Never drafts or sends. |
+| `content-draft` | Drafts LinkedIn posts and comments, grounded in your scope boundaries, thread state, and current facts, gated by the fact-checker agent before it's presented as ready to ship. |
 
 To get coaching, say something like:
 

@@ -30,9 +30,6 @@ company.*
 - **Fit angle:** [why you specifically fit here — the one-line thesis, tied to this profile's pitch]
 - **Why it's interesting:** [mission, product, team signal]
 - **Network:** [any warm connections or intro paths]
-- **Careers page:** [direct URL to the company's careers/jobs board, filtered to product-management
-  roles where the ATS supports it. Used by job-discovery's company-scan sourcing step — leave blank
-  if not yet researched, the scan skips companies without one rather than guessing a URL.]
 - **Notes:** [anything relevant — flag if this is directional/unverified vs. confirmed against a
   current opening. If there's an active loop, note "see pipeline-state.md" rather than restating stage.]
 
@@ -45,7 +42,6 @@ company.*
 - **Fit angle:**
 - **Why it's interesting:**
 - **Network:**
-- **Careers page:**
 - **Notes:**
 
 ---
@@ -57,7 +53,6 @@ company.*
 - **Fit angle:**
 - **Why it's interesting:**
 - **Network:**
-- **Careers page:**
 - **Notes:**
 
 ---
