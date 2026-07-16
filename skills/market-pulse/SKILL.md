@@ -7,10 +7,12 @@ description: >
   market-radar sub-agent to scan the user's watchlist (target companies and products, standards
   bodies and repos, key industry voices), diffs findings against the prior pulse and the user's
   landscape research, updates context/market-pulse.md, flags stale claims in the content backlog,
-  and presents a ranked list of engagement openings. Read-heavy; writes only market-pulse.md and
-  staleness flags. It never drafts or sends outreach — openings feed the user's own judgment.
+  archives quiet content threads out of engagement-log.md into its own pulse history, and presents
+  a ranked list of engagement openings. Read-heavy; writes market-pulse.md, staleness flags, and
+  narrowly, quiet-content-thread archiving in engagement-log.md. It never drafts or sends outreach
+  — openings feed the user's own judgment.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Market Pulse
@@ -28,7 +30,11 @@ than a decaying one. The corpus is the asset; content is a derivative.
   rewrite.
 - The content backlog (path from Linked files) — read to check freshness; update staleness flags
   only.
-- `context/engagement-log.md` — read to avoid suggesting openings in threads that are already live.
+- `context/engagement-log.md` — read to avoid suggesting openings in threads that are already
+  live. Narrow write exception: when a Content threads entry has had no new engagement for ~7
+  days, collapse it to one summary line and move the detail into this skill's own pulse history
+  (see Flow step 4a). This is structural housekeeping, not authorial editing — never touch Active
+  threads, the Action queue, or anything else in this file.
 
 ## Flow
 
@@ -43,6 +49,13 @@ than a decaying one. The corpus is the asset; content is a derivative.
    known state before accepting it (one verification fetch is fine here).
 4. **Write the pulse.** Append a dated entry to market-pulse.md: what changed, staleness flags,
    openings, watchlist changes. Update the known-state section in place.
+4a. **Archive quiet content threads.** Check each entry under engagement-log.md's Content threads
+   section. If its most recent dated engagement bullet is ~7+ days old with nothing newer, this
+   is the trigger to archive: write a one-line dated summary into this pulse entry's own record
+   (company/post name, final engagement numbers, outcome), then collapse the engagement-log.md
+   entry to a single line under its Dormant/closed section (or delete the detailed bullets if the
+   user's log doesn't use a Dormant/closed section for content). Do this for every stale entry
+   found, not just one. Skip entirely if no entries qualify — most runs won't have any.
 5. **Flag, don't fix.** For each staleness flag that touches the landscape report or a content
    draft, add an UPDATE REQUIRED note at the relevant spot (or list it in the pulse entry if the
    file is outside this skill's write scope). Never rewrite the user's prose.
