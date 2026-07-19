@@ -4,7 +4,7 @@ description: >
   This skill should be used when the user wants to process their job-alert email digest and find relevant new PM roles. Triggers when the user says "check my job digest", "process my job-alert email", "run job discovery", or similar. Pulls the latest digest from the user's email connector, screens roles by title against the user's search constraints (C7), fetches JDs for roles that pass, deep-screens each JD against the user's candidate profile (C2) and constraints (C7), and presents a curated shortlist with clear pass/borderline/excluded verdicts. After the user selects roles to pursue, creates infrastructure stubs (Cx company file, C3 target-company-map, pipeline-state.md) and presents a 3-path action menu per role.
 metadata:
   workflow: job-discovery
-  version: "1.5.1"
+  version: "1.6.0"
   step: "4-build"
 ---
 
@@ -81,10 +81,19 @@ Apply fast pass/fail to every role in the digest against C7 filters. **Do not fe
 
 For each role that passed or borderlined in Step 3, fetch the JD from the URL in the digest.
 
+**Fetch method priority (try in order, move to the next on failure):**
+
+1. **web_fetch** — works only if the URL has previously appeared in a user message or a prior `web_fetch` result. In practice this almost never holds for links extracted from a job-alert email (they arrive via the Gmail tool, never through the user), so expect this to fail with "URL not in provenance set" on unattended/scheduled runs. Try it anyway since it's cheap and occasionally the decoded destination happens to already be in-scope (e.g. re-processing a link the user pasted earlier) — but don't treat its failure as unusual.
+2. **Claude in Chrome** (`mcp__claude-in-chrome__*`) — highest-fidelity fetch when available, but requires a live, connected browser session. Check `list_connected_browsers` first; if empty, skip straight to method 3. This is realistically only available when the skill is run interactively with Nathan's browser open (e.g. a manual catch-up pass) — the 4:22 AM scheduled run will essentially always show zero connected browsers.
+3. **WebSearch fallback** — use when both of the above are unavailable or fail. This is the only method that reliably works unattended, since it doesn't require the URL to be pre-authorized or a browser to be connected. Confirmed working against SmartRecruiters and Greenhouse-hosted postings (returns real scope/responsibilities/comp/location); confirmed **not** reliable against `careers.microsoft.com` (JS-rendered SPA, search engines can't index the specific req) or Cisco's Workday-hosted postings (`*.myworkdayjobs.com`, poor indexing) — for those two platforms, WebSearch is worth trying but failure there is expected and should route to "JD inaccessible" same as before, not be treated as a bug.
+   - Query with company + exact title (+ req ID if the digest includes one), e.g. `ServiceNow "Staff Product Manager" "Integration Security & AI Gateway"`.
+   - **Verify the match before screening against it.** Company job boards frequently have many similar-sounding postings (e.g. Scale AI runs several "AI Product Manager, [vertical]" reqs at once) — confirm the search result's URL matches the digest's decoded destination URL (or, if titles differ slightly, treat it as the closest same-company/same-level match and note the discrepancy rather than silently assuming it's identical). If the search returns only generic company-wide listings with no specific-posting match, treat as JD inaccessible rather than screening against the wrong content.
+   - Use whatever scope/responsibilities/comp/location detail the search summary surfaces — it's usually enough for a real Pass/Borderline/Exclude verdict even without the full page.
+
 **NewPMJobs.com tracking-redirect links:** As of July 2026, NewPMJobs.com wraps every JD link in its own redirect service instead of sending direct posting URLs — the link in the email looks like `https://api.newpmjobs.com/api/r?u=[base64]&s=[signature]&...`. The raw email body has a known, recurring character-corruption issue that silently drops bytes, most often landing on the `s=` (signature) parameter — when that happens the tracking redirect fails even though the real posting is fine. Don't fetch this kind of link directly. Instead:
 1. Extract the `u=` parameter's value.
 2. Base64-decode it (standard or URL-safe alphabet, pad as needed) to recover the real destination URL.
-3. Fetch the decoded URL directly, not the tracking link.
+3. Run that decoded URL through the fetch method priority above (web_fetch → Chrome → WebSearch), not the tracking link.
 
 This bypasses the broken redirect entirely. The `u=` parameter itself has not been observed to be corrupted in testing (unlike `s=` and the trailing tracking params) — if `u=` fails to decode into something starting with `http`, treat it the same as any other inaccessible JD rather than guessing.
 
@@ -93,9 +102,9 @@ If the digest's link format changes again (e.g. a different sender, or a direct 
 **Rules:**
 - If a JD is behind a login, returns no content, or the decoded destination is a JavaScript-only page with no readable job text in the body, check the page's metadata (meta description / og:description) before giving up — some ATS platforms (observed: Ashby) render the full page client-side but still populate a real, usable JD summary in metadata even when the body is empty. Use that if present.
 - **Confirm the fetched page is actually the specific posting, not a generic jobs page.** Some career-site links only work as filters applied client-side (observed: a Stripe link with a `?gh_jid=` query parameter resolved to the general "Stripe Jobs" search page, not that job, when fetched statically) — the fetch succeeds and returns real content, but it's the wrong content. Check that the page's title or metadata references the specific role title from the digest before treating it as that role's JD. If it doesn't match (e.g. you land on a search page, a company jobs index, or an unrelated posting), treat it as inaccessible rather than screening against mismatched content.
-- If no readable, role-specific content can be found by any of the above, mark the role as "JD inaccessible" and include it in the Step 5 output so the user can review manually.
+- If no readable, role-specific content can be found by any of the above (including the WebSearch fallback), mark the role as "JD inaccessible" and include it in the Step 5 output so the user can review manually.
 - If the JD is very long, extract the relevant sections: responsibilities, requirements, seniority signals, comp if listed, remote/location policy.
-- Note the company, role title, and URL (the real destination URL, not the tracking link) alongside the extracted content.
+- Note the company, role title, and URL (the real destination URL, not the tracking link) alongside the extracted content. If screened via WebSearch rather than a direct fetch, note that too (`Screened via: WebSearch`) so a future manual pass knows the confidence level.
 
 ---
 
