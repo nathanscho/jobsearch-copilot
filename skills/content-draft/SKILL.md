@@ -57,6 +57,11 @@ gets skipped.
    - Open like a peer reacting to something specific, not a critic issuing a verdict. Avoid
      opening lines that grade or pronounce judgment on the post itself ("this is the proof point
      that...", "this is exactly right") — react to a specific detail instead.
+   - Don't name-check the other person's biography or work history (former employer, past role,
+     old product) unless it's already live in the thread or the user has an established
+     relationship with them. An unearned biographical callback in a first comment reads as "I
+     looked you up," which is a tell, not a connector. Let technical or substantive points stand
+     on their own; the research can inform the question without appearing in the sentence.
    - Concede real points plainly before pushing back; don't bury agreement inside a rebuttal.
    - One real question or one real point of pushback per draft, not several stacked together.
    - No claim in the draft should exceed what candidate-profile.md's scope boundaries support.

@@ -1,6 +1,6 @@
 {
   "name": "jobsearch-copilot",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "A personalized job-search system for senior PMs and similar roles: discover roles, prep for interviews, debrief rounds, diagnose mock interviews, and run cross-loop retrospectives. Personalization lives in config + context files, so each user runs the same skills against their own profile.",
   "author": {
     "name": "Nathan Cho"
