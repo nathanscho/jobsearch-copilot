@@ -9,7 +9,8 @@ This one is built around a different philosophy:
 
 Job Search Co-pilot helps you understand what a role is really hiring for, map your experience honestly,
 form a clear positioning thesis, prepare for interviews, debrief what happened, and improve across the
-full loop.
+full loop, on both sides of the table: how you present yourself to a hiring committee, and how you show
+up in your network and in public.
 
 It is not an auto-apply bot.
 It is a thinking system for candidates who want quality, fit, and clarity.
@@ -28,6 +29,8 @@ It is especially useful if you are trying to:
 - Debrief real interviews and extract forward guidance
 - Diagnose mock interview performance
 - Track patterns across a job-search loop
+- Stay current on your target companies and network without spending hours on manual research
+- Engage your network and post publicly without sounding generic or getting the facts wrong
 
 The current setup is optimized around senior product management searches, but the underlying skills can
 be adapted to other roles.
@@ -47,6 +50,11 @@ A strong candidate helps the interviewer understand:
 The goal is not to fake certainty. The goal is to turn scattered experience into a clear, evidence-backed
 role-fit thesis.
 
+The same standard applies once you are networking or posting, not just interviewing. A comment, DM, or
+post is only worth sending if it is grounded in something true and something you actually earned the
+right to say. That is what the engagement loop below exists to enforce, not to help you post more, but
+to make sure everything you do post or send is fact-checked and non-generic first.
+
 ## What it helps you produce
 
 Depending on the skill you run, the system can help create:
@@ -61,6 +69,11 @@ Depending on the skill you run, the system can help create:
 - Interview debriefs
 - Mock interview diagnostics
 - Cross-loop coaching and retrospectives
+- Strategic follow-up notes after interviews, mentoring calls, and networking conversations
+- A weekly scan of your target companies, standards, and network for what changed
+- An engagement brief showing whose turn it is to reply, which threads have gone quiet, and who is
+  worth reaching out to next
+- Fact-checked LinkedIn post and comment drafts
 
 The system gets sharper over time because it accumulates context from your profile, stories, constraints,
 interview notes, pipeline, and debriefs.
@@ -113,6 +126,30 @@ If you are new, start here:
 6. **Run coaching periodically** — looks across the full search for patterns, blindspots, and next
    actions.
 
+## Engagement loop (optional)
+
+A second loop, independent of the golden path above. Use it if part of your search runs through your
+network and public visibility, not just applications. Skip it entirely if that is not how you are
+searching; nothing else in this system depends on it.
+
+1. **market-pulse** scans your watchlist (target companies, standards bodies, key voices) on a weekly
+   schedule and keeps `context/market-pulse.md` current, so nothing you post or send is grounded in
+   stale facts.
+2. **engagement-sync** reconciles `context/engagement-log.md` against your actual LinkedIn inbox,
+   surfaces whose turn it is to reply and which threads have gone quiet, and scores new opportunities
+   worth engaging, each with a stated payoff, not just a label.
+3. **content-draft** writes the actual post, comment, or reply, grounded in your scope boundaries
+   (candidate-profile.md), the current facts (market-pulse.md), and the thread's real state
+   (engagement-log.md), so it never stacks a second ask on an unanswered one.
+4. Every draft from content-draft passes through the **fact-checker** agent before it is presented as
+   ready to ship. Nothing posts or sends itself; you always ship it yourself.
+5. **follow-up-note** covers the adjacent, event-triggered case: a strategic note after a specific
+   interview, mentoring call, or networking conversation, rather than ongoing content or DMs.
+
+These four skills plus the fact-checker agent share the same context files as the golden path where it
+matters (your scope boundaries in candidate-profile.md apply everywhere) but otherwise run
+independently. You can use one loop without the other.
+
 ## Minimum viable context
 
 You do not need to fill out everything manually. The only thing you need to start is your resume.
@@ -128,6 +165,8 @@ Everything else can be drafted, asked during setup, or accumulated as you use th
 | Loop logs | Built from debriefs | Pattern recognition |
 | Mock diagnostics | Created from practice interviews | Coaching and skill development |
 | Pipeline state | Synced from email and optional chat | Search status and next actions |
+| Engagement log | Optional, only if using the engagement loop; seeded on first `market-pulse` or `engagement-sync` run | Thread state, house rules, action queue |
+| Market pulse | Optional, only if using the engagement loop; seeded on first `market-pulse` run | Watchlist, known state, dated scan history |
 
 The system is useful on day one, but becomes more valuable after each prep, debrief, and diagnostic.
 
@@ -142,11 +181,17 @@ The system is useful on day one, but becomes more valuable after each prep, debr
 | `jobsearch-status` | Syncs email, plus optional chat, into a current pipeline view. |
 | `interview-prep-brief` | Creates a tailored prep brief and one-page cheat sheet for a specific round. |
 | `interview-debrief` | Scores a completed round and extracts forward guidance, from your notes or a transcript if you have one. |
+| `follow-up-note` | Generates a strategic follow-up note after an interview, mentoring call, or networking conversation, leading with a send/hold verdict before drafting anything. |
 | `diagnose-mock-interview` | Diagnoses mock or practice answers. Not intended for real interview debriefs. |
 | `jobsearch-coach` | Acts as a reflective coach across goals, patterns, blindspots, accountability, funnel health, and positioning. |
 | `market-pulse` | Scans your watchlist for changes and surfaces engagement openings. Never drafts or sends. |
 | `engagement-sync` | Reconciles thread state against your LinkedIn inbox and scores who to engage next. Never drafts or sends. |
 | `content-draft` | Drafts LinkedIn posts and comments, grounded in your scope boundaries, thread state, and current facts, gated by the fact-checker agent before it's presented as ready to ship. |
+
+Two sub-agents support the skills above rather than being invoked directly: `fact-checker` verifies
+every falsifiable claim in a `content-draft` output before it is presented as ready to ship, and
+`market-radar` does the actual watchlist scanning inside `market-pulse`. Both are read-only and never
+contact anyone.
 
 To get coaching, say something like:
 
@@ -165,7 +210,8 @@ couldn't reliably read your pipeline. `jobsearch-coach` replaces it.)
 
 ## Optional add-on
 
-`addons/daily-digest.md` — a scheduled morning digest that can be posted to your chat channel. This
+`addons/daily-digest.md` — a scheduled morning digest that runs `job-discovery` and `jobsearch-status`,
+plus `engagement-sync` if you have an engagement log, then posts everything to your chat channel. This
 requires a chat connector.
 
 ## Personalization model
@@ -186,6 +232,8 @@ tools, never in this repo.
 | `context/coaching-log.md` (C9) | History of coaching check-ins and commitments |
 | `context/companies/[slug].md` (Cx) | Per-company file: prior rounds, interviewer intel |
 | `context/pipeline-state.md` | Current job-search pipeline state |
+| `context/engagement-log.md` | Thread state for networking and content: who you owe a reply, house style rules, action queue (engagement loop only) |
+| `context/market-pulse.md` | Watchlist, known state, and dated scan history for your target companies and network (engagement loop only) |
 
 Templates for these files live in `templates/` and are copied into your folder during setup.
 
@@ -198,6 +246,8 @@ automation:
 - Email connector, to unlock job discovery and automated pipeline status
 - Chat connector, for digests and chat-based search updates
 - File connector, for uploading finished prep briefs and debriefs
+- LinkedIn connector (e.g. Kondo), to unlock LinkedIn-sourced pipeline signal and the engagement loop
+  (`engagement-sync`, and the reconciliation step inside `market-pulse`)
 
 If a connector is missing, the skills that need it aren't available yet; everything else works normally.
 
@@ -228,6 +278,8 @@ This is not a tool for:
 - Keyword-stuffing resumes
 - Outsourcing judgment to AI
 - Pretending every role is a fit
+- Mass-posting or mass-commenting on LinkedIn
+- Claiming familiarity with someone's background you have not earned
 
 The system is intentionally built around human judgment. You own the truth, the strategy, and the final
 voice. The co-pilot helps structure the thinking.
@@ -276,6 +328,24 @@ Get coaching:
 Coach me on what I should focus on next in my search.
 ```
 
+Run a market pulse:
+
+```text
+What changed this week in my target market?
+```
+
+Sync your engagement state:
+
+```text
+Whose turn is it to reply, and who should I engage next?
+```
+
+Draft a comment:
+
+```text
+Draft a comment on this post.
+```
+
 ## Design principles
 
 1. **Fit over volume** — the goal is not to apply to more jobs. The goal is to identify and pursue roles
@@ -287,6 +357,11 @@ Coach me on what I should focus on next in my search.
 4. **Human judgment over automation** — the co-pilot can suggest, structure, and challenge. It should not
    invent or decide for you.
 5. **Learning loop over one-off prep** — each prep, mock, and debrief should improve the next one.
+6. **The same discipline extends to networking and content** — market-pulse, engagement-sync, and
+   content-draft exist because generic outreach and unverified claims are the same failure mode this
+   system rejects everywhere else. One ask per message, never stacked on an unanswered thread. Every
+   claim fact-checked before it ships. Volume is not the goal in your network any more than it is in
+   your applications.
 
 ## License
 
