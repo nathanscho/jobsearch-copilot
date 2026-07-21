@@ -132,6 +132,10 @@ A second loop, independent of the golden path above. Use it if part of your sear
 network and public visibility, not just applications. Skip it entirely if that is not how you are
 searching; nothing else in this system depends on it.
 
+0. **capture-intake** (optional entry point) processes whatever you save to a `#capture` channel,
+   links, screenshots, files, and routes each item by intent instead of treating everything as market
+   intel: insights feed market-pulse.md, comment-worthy posts feed the content queue, reminders feed
+   the engagement log, and plugin/workflow ideas land in IDEAS.md instead of getting lost.
 1. **market-pulse** scans your watchlist (target companies, standards bodies, key voices) on a weekly
    schedule and keeps `context/market-pulse.md` current, so nothing you post or send is grounded in
    stale facts.
@@ -187,6 +191,7 @@ The system is useful on day one, but becomes more valuable after each prep, debr
 | `market-pulse` | Scans your watchlist for changes and surfaces engagement openings. Never drafts or sends. |
 | `engagement-sync` | Reconciles thread state against your LinkedIn inbox and scores who to engage next. Never drafts or sends. |
 | `content-draft` | Drafts LinkedIn posts and comments, grounded in your scope boundaries, thread state, and current facts, gated by the fact-checker agent before it's presented as ready to ship. |
+| `capture-intake` | Processes items you post to a `#capture` channel (links, screenshots, files) and routes each by intent: market intel into market-pulse.md, comment candidates into the content queue, reminders into the engagement log, workflow ideas into IDEAS.md. Never sends anything itself. |
 
 Two sub-agents support the skills above rather than being invoked directly: `fact-checker` verifies
 every falsifiable claim in a `content-draft` output before it is presented as ready to ship, and
@@ -234,6 +239,7 @@ tools, never in this repo.
 | `context/pipeline-state.md` | Current job-search pipeline state |
 | `context/engagement-log.md` | Thread state for networking and content: who you owe a reply, house style rules, action queue (engagement loop only) |
 | `context/market-pulse.md` | Watchlist, known state, and dated scan history for your target companies and network (engagement loop only) |
+| `context/capture-log.md` | Log of everything routed through capture-intake, regardless of type or verdict (engagement loop only) |
 
 Templates for these files live in `templates/` and are copied into your folder during setup.
 

@@ -14,7 +14,7 @@ description: >
   loop. Safe to run on-demand or on a schedule — writes are narrow and structured; never posts new
   Slack messages, only reactions; never sends drafted content.
 metadata:
-  version: "2.0.0"
+  version: "2.2.0"
 ---
 
 # capture-intake
@@ -67,8 +67,11 @@ either an explicit signal from the user or a clear content-based inference (Step
 
 - **Chat connector** (`~~chat`, Slack) — required. Reads the capture channel
   (`config.md` → `capture_channel_id`). Tool names come from config.md's `chat_mcp_prefix`.
-- **Web fetch** — to read article link content. If unavailable or blocked, don't guess at the
-  content — log it as "could not fetch."
+- **Web fetch** — to read article link content. See Step 4's fetch priority chain — plain
+  `web_fetch` alone is not enough for JS-rendered pages (YouTube, and similar).
+- **Claude in Chrome** (optional) — used as the second fetch method when a browser is connected;
+  check `list_connected_browsers` before relying on it. Skip straight to WebSearch if none is
+  connected.
 - **Native vision** — screenshots/images are read directly, no separate OCR step.
 - **Context base path**: the `context/` folder (config.md `context_path`).
 
@@ -118,8 +121,8 @@ capture-intake skill.
 
 ## Log
 
-| Date | Source | Format | Intent | Verdict | Where it went | Reaction | Notes |
-|------|--------|--------|--------|---------|----------------|----------|-------|
+| Date | Source | Format | Intent | Verdict | Rating | Where it went | Reaction | Notes |
+|------|--------|--------|--------|---------|--------|----------------|----------|-------|
 ```
 
 ---
@@ -170,8 +173,17 @@ guessing at the more consequential routes.
 Skip this step for Reminder items with no link (the message text is the content). For everything
 else, hold all findings before writing anything:
 
-- **Link** → fetch the article content. If it fails, mark "could not fetch," log with
-  link/title/domain only.
+- **Link** → try in order, moving to the next on failure:
+  1. **web_fetch** — cheap, works for static/server-rendered pages. Fails silently-empty or
+     content-free on JS-rendered pages (YouTube, and similar SPA-style sites) — don't mistake an
+     empty/near-empty result for "nothing there," treat it as this method failing.
+  2. **Claude in Chrome** (`navigate` + `get_page_text`, expanding any "...more"/description
+     toggles via `find`+click if the initial text is truncated) — check
+     `list_connected_browsers` first; skip to method 3 if none connected.
+  3. **WebSearch** — last resort, gets a title/topic at minimum even when the page itself can't be
+     read. Enough to classify and log, but note in the log that only a search snippet was used,
+     not full content.
+  If all three fail: mark "could not fetch," log with link/title/domain only.
 - **Screenshot / image** → read directly.
 - **File** → read directly.
 
@@ -187,9 +199,25 @@ a watchlisted key voice's public statement, a new analyst signal, or meaningfull
 refines/challenges the thesis. Not relevant if it's generic industry news with no bearing on the
 thesis, or duplicates something already in Known state.
 
-If relevant: append a dated, sourced bullet to market-pulse.md's Known state, tagged `(captured)`.
-If it touches the landscape report, add a line under Staleness flags — never edit the report's
-prose directly. If not relevant: no market-pulse.md write, log only.
+If relevant, rate it on two axes, each High/Medium/Low, with a one-line "why" for each:
+- **Relevance** — how directly it connects to the watchlist/thesis. Core watchlist company or the
+  thesis itself = High; second-ring company or an indirect signal = Medium; tangential = Low.
+- **Importance** — how much it actually adds. Materially new facts not already in Known state =
+  High; supporting/confirming detail or anecdotal evidence = Medium; minor or likely duplicate of
+  something already logged = Low.
+
+**Dilution gate:** only write to market-pulse.md if Importance is Medium or High. Relevance alone
+does not clear the bar — a High-relevance item that's still Low importance (a restatement, a
+single-anecdote data point, something already substantively covered) stays out of Known state.
+Known state is a curated corpus other skills treat as current fact; every low-value entry makes it
+harder to trust and slower to scan. Log every item regardless (Step 6) — this gate only controls
+what gets promoted into market-pulse.md, nothing is lost from the record.
+
+If it clears the gate: append a dated, sourced bullet to market-pulse.md's Known state, tagged
+`(captured, [Relevance] relevance/[Importance] importance)`, with the rating reasoning folded into
+the same sentence as the fact (see existing entries for the pattern). If it touches the landscape
+report, add a line under Staleness flags — never edit the report's prose directly. If not relevant,
+or relevant but Low importance: no market-pulse.md write, log only.
 
 ### Comment candidate
 
@@ -237,7 +265,9 @@ Remember: this is a write to a **different repo** than everything else in this s
 Regardless of intent or verdict, append one row to capture-log.md's Log table: Date, Source
 (URL/domain, file name, or "screenshot"), Format (link/screenshot/file), Intent (Insight/Comment
 candidate/Reminder/Workflow idea), Verdict (Relevant/Not relevant/Drafted/Held — awaiting/Filed/
-Could not fetch/No extractable content), Where it went, Reaction, Notes (one-line reasoning).
+Could not fetch/No extractable content), Rating (Insight items only — "[Relevance] / [Importance]",
+e.g. "High / Medium"; "n/a" for every other intent or a non-relevant verdict), Where it went,
+Reaction, Notes (one-line reasoning).
 
 Update the Checkpoint block: Last processed message TS = latest message TS seen, Last run =
 today's date.
@@ -265,7 +295,7 @@ Group by intent, not a flat list:
 Processed [N] new items from #capture since [last checkpoint date].
 
 📌 Insight ([N]):
-- [one line: what it was, what it confirmed/changed, where it landed]
+- [Relevance/Importance] — [one line: what it was, what it confirmed/changed, where it landed]
 
 💬 Comment candidates ([N]):
 - [person/post — drafted and waiting in engagement-log.md, or held because thread is awaiting]
